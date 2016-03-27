@@ -1,6 +1,18 @@
-#include <stdio.h>
- 
-int int main (int width1, int height1){
+# include <stdio.h>
+
+int main()
+{
+	printf("please enter a grid size to play on type g int int \n");
+	int width;
+	int height;
+	char identifier;
+	scanf("%c %d %d", &identifier, &width, &height );
+	printf("the identifier was %c, the width  and height is %d, %d \n", identifier, width, height);
+	Arrays(width,height);
+	return 0;
+}
+
+int Arrays(int width1, int height1){
      int width=width1;
      int height=height1;
      int game [height][width];
