@@ -8,10 +8,7 @@ int main()
     int nargs;
 	char identifier;
     char input[10];
-
-    int Gheight;
-    int Gwidth;
-    int Globalboard[100][100];
+    int grid[100][100];
     
     fgets(input, sizeof(input), stdin);
     nargs = sscanf(input, "%c %d %d\n", &identifier, &width, &height);
@@ -27,10 +24,10 @@ int main()
         printf("grid is too big");
         return 1;
     }
-    Gheight=height;
-    Gwidth=width;
-    makeArray(width, height);
-    printBoard();
+   
+    
+    makeArray(grid[100][100],width, height);
+    //printBoard();
 	//scanf("%c %d %d", &identifier, &width, &height );
 	//printf("the identifier was %c, the width  and height is %d, %d \n", identifier, width, height);
 	//makeArray(width,height);
@@ -39,10 +36,9 @@ int main()
 	return 0;
 }
 
-int makeArray(int width1, int height1){
-     int width=width1+2; //plus two here so that the borders don't reduce the size of the game board
-     int height=height1+2;
-     int Globalboard [height][width];
+int makeArray(grid[100][100], int widthIn, int heightIn){
+     int width=widthIn+2; //plus two here so that the borders don't reduce the size of the game board
+     int height=heightIn+2;
     char corner='+';
      char top='-';
      char sides='|';
@@ -54,17 +50,17 @@ int makeArray(int width1, int height1){
          {
              if ((i==0 &&j==0) || (i==height-1&&j==0) ||(i==0&&j==width-1)|| (i==height-1&&j==width-1))
              {
-                 Globalboard [i][j]=corner;
+                 grid [i][j]=corner;
              }
         else if (i==0 || i==height-1)
             {
-            Globalboard [i][j]=top;
+            grid [i][j]=top;
             }
         else if (j==0 ||j==width-1){
-            Globalboard [i][j]=sides;   
+            grid [i][j]=sides;   
             }
             else{
-            Globalboard [i][j]= stars;       
+            grid [i][j]= stars;       
             }
         }
 
@@ -73,7 +69,7 @@ int makeArray(int width1, int height1){
      {
          for (int l = 0; l < width; ++l)
          {
-             printf("%c", Globalboard[k][l]);       
+             printf("%c", grid[k][l]);       
         }
          
     printf("\n");
@@ -81,6 +77,7 @@ int makeArray(int width1, int height1){
      return 0;
  }
  //checks whether the provided co-ordinates are valid or not. Returns 0 if they are valid, 1 otherwise.
+ /*
 int isValid (int width, int height){
     if (width!=0 && width!=Gwidth){
         if (height!=0 && height!=Gheight){
@@ -125,4 +122,6 @@ printf("%c \n",Globalboard[4][4]);
     }
     return 0;
     */
-}
+	
+
+
