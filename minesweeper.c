@@ -41,8 +41,8 @@ void makeArray(char grid[100][100] ,int widthIn, int heightIn){
  
 int isValid (int widthIn, int heightIn){
  // printf("flag 1, %d width, %d height\n", widthIn, heightIn);
-    if (widthIn>0 && widthIn<width+1){
-        if (heightIn>0 && heightIn<height+1){
+    if (widthIn>0 && widthIn<width+2){
+        if (heightIn>0 && heightIn<height+2){
             return 0;
         }
         else{
@@ -68,7 +68,7 @@ void placeBombs(int bombgrid[20], int width, int height){
     int checkRepeat(int bombgrid[totalMoves], int m, int l); //declaration of the method so it compiles properly.
     
     while (counter<10){
-    printf("Please enter Bomb co-ordinate number %d \n", counter+1);
+    //printf("Please enter Bomb co-ordinate number %d \n", counter+1);
     fgets(input, sizeof(input), stdin);
     nargs = sscanf(input, "%c %d %d\n", &identifier, &Bwidth, &Bheight);
     Bheight=Bheight+1;
@@ -84,7 +84,7 @@ void placeBombs(int bombgrid[20], int width, int height){
           exit(1);
           }
         else{
-            printf("Bomb placed at %d, %d, \n", Bwidth, Bheight);
+           // printf("Bomb placed at %d, %d, \n", Bwidth, Bheight);
             bombgrid[counter*2]=Bwidth;
             bombgrid[counter*2+1]=Bheight;
             counter++;
@@ -109,8 +109,6 @@ void printBoard(char mygrid[100][100], int width, int height){
   //the grid passed has co-ordinates of two consecutive numbers stored. This checks to see if the provided co-ordinates are within the array which is a list of co-ordinates 
   //that have already been provided. Returns 0 if no previous inputs are found, 1 if they are.
   int checkRepeat(int gridCheck[totalMoves], int xcheck, int ycheck){
-     printf("%d is the xcheck, %d is the ycheck\n", xcheck, ycheck );
-     
       for (int i=0; i<totalMoves+1;++i){
         int tempX=gridCheck[i*2];
         int tempY=gridCheck[i*2+1];
@@ -126,11 +124,72 @@ void printBoard(char mygrid[100][100], int width, int height){
     }
 
     void updategrid(char grid[100][100], int x, int y, char z){
+
       if (grid[x][y]!='*'){
        printf("error 9\n");
+       exit(1);
       }
      else  grid[x][y]=z;
     }
+
+
+    /*The method check how many bombs there are surrounding a given uncover. 
+    */
+    char getbombcount(int bombgrid[20], int xvalue, int yvalue){
+     int bombcount=0;
+     char mychar;
+     int isbomb(int bombgrid[20], int x, int y); //to avoid implicit declaration in compilation
+      
+    printf("The x value: %d, the y value %d \n",xvalue, yvalue );
+      for (int i = 0; i < 3; ++i){
+        for (int j=0; j<3; ++j){
+          int getx=xvalue+(i-1);
+          int gety=yvalue+(j-1);
+          //printf("The co-ordinates being checked are %d,%d\n", getx, gety );
+          int temp=isbomb(bombgrid,getx, gety);
+         bombcount=bombcount+ temp;
+          }
+      }
+      if(bombcount==0){
+        mychar='0';
+      }
+      if(bombcount==1){
+        mychar='1';
+      }
+      if(bombcount==2){
+        mychar='2';
+      }
+       if(bombcount==3){
+        mychar='3';
+      }
+       if(bombcount==4){
+        mychar='4';
+      }
+       if(bombcount==5){
+        mychar='5';
+      }
+       if(bombcount==6){
+        mychar='6';
+      }
+       if(bombcount==7){
+        mychar='7';
+      }
+       if(bombcount==8){
+        mychar='8';
+      }
+      return mychar;
+    }
+int isbomb(int bombgrid[20], int xvalue, int yvalue){
+for(int m=0;m<20;++m){
+            if(bombgrid[m*2]==xvalue && bombgrid[m*2+1]==yvalue){
+              return 1;
+            }
+          }
+          return 0;
+    }
+
+
+
 	int main(void)
 {
     printf("please enter a grid size to play on type g int int \n");
@@ -168,15 +227,17 @@ void printBoard(char mygrid[100][100], int width, int height){
     //int flagscount=0;
     int xvalue; //the x variable input for flags and uncovers
     int yvalue; // the y variable input for flags and uncovers
-    char trackmoves[totalMoves];
-    char input2 [10];
-    //char flag= 'z';
+    //char trackmoves[totalMoves];
+    char input2 [10]; 
+    int isbomb(int bombgrid[20], int x, int y);
 
 
     for (int i=0; i<totalMoves; ++i){
-      printf("Please enter a co-ordinate to uncover or flag\n");
-      fgets(input2, sizeof(input2), stdin);
+    printf("Please enter a co-ordinate to uncover or flag\n");
+    fgets(input2, sizeof(input2), stdin);
     nargs = sscanf(input2, "%c %d %d\n", &identifier, &xvalue, &yvalue);
+    xvalue=xvalue+1;
+    yvalue=yvalue+1;
     printf("THe identifier is: %c \n", identifier );
     if (identifier!='u' && identifier!='f'){
       printf("error 6\n");
@@ -184,6 +245,10 @@ void printBoard(char mygrid[100][100], int width, int height){
     }
     if (isValid(xvalue, yvalue)==1){
       printf("error 7\n");
+      exit(1);
+    }
+    if(isbomb(bombgrid,xvalue, yvalue)==1 && identifier!='f'){
+      printf("Lose\n");
       exit(1);
     }
     /*
@@ -194,13 +259,18 @@ void printBoard(char mygrid[100][100], int width, int height){
     */
     else{
       //The input is valid, first add the co-ordinate to the list of moves
-      trackmoves[i*2]=xvalue;
-      trackmoves[i*2+1]=yvalue;
+      if (identifier=='u'){
+        char symbol=getbombcount(bombgrid, xvalue, yvalue);
+        //printf("The symbol being put in is %c\n", symbol);
+        updategrid(grid, xvalue, yvalue, symbol);
+      }
+      else{
      updategrid(grid, xvalue, yvalue, identifier);
-      printBoard(grid, width, height);
+    }
+    printBoard(grid, width, height);
     }
     }
-    return 0;
+    printf("Won\n");
 }
 
 
